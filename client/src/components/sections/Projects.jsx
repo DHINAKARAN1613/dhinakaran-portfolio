@@ -21,7 +21,7 @@ const Projects = () => {
     const fetchProjects = async () => {
       try {
         const { data } = await api.get('/projects');
-        setProjects(data);
+        setProjects(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Failed to fetch projects', error);
       } finally {
