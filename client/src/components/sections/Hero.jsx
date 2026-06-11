@@ -1,27 +1,12 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { FiDownload, FiArrowRight, FiGithub, FiLinkedin, FiTwitter, FiChevronDown } from 'react-icons/fi';
-import api from '../../utils/api';
-import Skeleton from '../ui/Skeleton';
-import resume from './resume.pdf'
+import { FiDownload, FiArrowRight, FiGithub, FiLinkedin, FiChevronDown } from 'react-icons/fi';
+import resume from './resume.pdf';
 const Hero = () => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await api.get('/profile');
-        setProfile(data);
-      } catch (error) {
-        console.error('Failed to fetch profile', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
+  const greeting = "Hello, I'm";
+  const name = "DHINAKARAN M";
+  const rolesSequence = ["Aspiring .NET Developer", 2000, "Full Stack Developer", 2000, "Backend Engineer", 2000];
+  const description = "Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies. Focused on building scalable web applications with clean UI and robust backend architecture.";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -39,29 +24,6 @@ const Hero = () => {
       transition: { type: 'spring', stiffness: 100 },
     },
   };
-
-  if (loading || !profile) {
-    return (
-      <section id="hero" className="min-h-screen flex items-center justify-center section-padding relative overflow-hidden">
-        <div className="container mx-auto z-10 text-center max-w-4xl space-y-6">
-          <Skeleton className="h-10 w-48 mx-auto" />
-          <Skeleton className="h-24 w-3/4 mx-auto" />
-          <Skeleton className="h-20 w-2/3 mx-auto" />
-          <div className="flex justify-center gap-4 mt-8">
-            <Skeleton className="h-14 w-40 rounded-xl" />
-            <Skeleton className="h-14 w-40 rounded-xl" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Fallbacks if data is missing
-  const greeting = profile.greeting || "Hello, I'm";
-  const name = profile.name || "Developer";
-  const rawRoles = profile.roles?.length > 0 ? profile.roles : ["Developer"];
-  const rolesSequence = rawRoles.flatMap(role => [role, 2000]);
-  const description = profile.heroDescription || "I build digital experiences.";
 
   return (
     <section id="hero" className="min-h-screen flex items-center justify-center section-padding relative overflow-hidden">
@@ -105,25 +67,25 @@ const Hero = () => {
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <a href="#projects" className="btn-primary w-full sm:w-auto flex items-center justify-center gap-2 py-4 px-8 text-lg shadow-xl shadow-primary-500/25 group">
-              View My Work
+              View Projects
               <FiArrowRight className="transform group-hover:translate-x-1 transition-transform" />
             </a>
             <a href={resume} download="Dhinakaran_Resume.pdf" target="_blank" rel="noreferrer" className="btn-outline w-full sm:w-auto flex items-center justify-center gap-2 py-4 px-8 text-lg group">
               <FiDownload className="transform group-hover:-translate-y-1 transition-transform" />
-              Download CV
+              Download Resume
+            </a>
+            <a href="#contact" className="btn-outline w-full sm:w-auto flex items-center justify-center gap-2 py-4 px-8 text-lg group">
+              Contact Me
             </a>
           </motion.div>
 
           {/* Social Links */}
           <motion.div variants={itemVariants} className="flex items-center justify-center gap-6">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
+            <a href="https://github.com/dhinakaran" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
               <FiGithub size={24} />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
+            <a href="https://www.linkedin.com/in/dhina1316/" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
               <FiLinkedin size={24} />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
-              <FiTwitter size={24} />
             </a>
           </motion.div>
 

@@ -34,7 +34,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-dark-200 dark:border-dark-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-dark-500">
-          <p>© {year} Dhinakaran M. All rights reserved.</p>
+          <p>© {year} Designed and Developed by DHINAKARAN M. All rights reserved.</p>
           <div className="flex gap-4">
             <Link to="/admin" className="hover:text-primary-500 transition-colors">
               Admin Login

@@ -42,11 +42,48 @@ const Contact = () => {
     setLoading(true);
     
     try {
-      await api.post('/contacts', formData);
-      toast.success('Message sent successfully! I will get back to you soon.');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      // Web3Forms Integration
+      // Replace 'YOUR_ACCESS_KEY_HERE' with your actual Web3Forms access key
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: '6134cfe7-e365-4a39-b13c-a0e04d7d8d1c',
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('Message sent successfully! I will get back to you soon.');
+        
+        // Also save to local storage so it shows up in the Admin Dashboard!
+        const localMessages = localStorage.getItem('portfolio_messages');
+        const messages = localMessages ? JSON.parse(localMessages) : [];
+        messages.push({
+          _id: Date.now().toString(),
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          createdAt: new Date().toISOString(),
+          read: false
+        });
+        localStorage.setItem('portfolio_messages', JSON.stringify(messages));
+
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        toast.error('Make sure you added your Web3Forms Access Key in Contact.jsx!');
+      }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+      toast.error('Failed to send message. Please try again.');
     } finally {
       setLoading(false);
     }

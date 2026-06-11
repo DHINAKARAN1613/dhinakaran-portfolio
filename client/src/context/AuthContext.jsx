@@ -21,8 +21,13 @@ export const AuthProvider = ({ children }) => {
         return;
       }
       try {
-        const { data } = await api.get('/auth/profile');
-        setAdmin(data.admin);
+        // Mock verification
+        await new Promise(resolve => setTimeout(resolve, 500));
+        if (token === 'mock-jwt-token') {
+          setAdmin({ email: 'admin@dhinakaran.dev', name: 'Dhinakaran M' });
+        } else {
+          logout();
+        }
       } catch {
         logout();
       } finally {
@@ -33,11 +38,19 @@ export const AuthProvider = ({ children }) => {
   }, [token]);
 
   const login = async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
-    setAdmin(data.admin);
-    return data;
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    if (email === 'admin@dhinakaran.dev' && password === 'Admin@123') {
+      const mockToken = 'mock-jwt-token';
+      const mockAdmin = { email, name: 'Dhinakaran M' };
+      
+      localStorage.setItem('token', mockToken);
+      setToken(mockToken);
+      setAdmin(mockAdmin);
+      return { token: mockToken, admin: mockAdmin };
+    } else {
+      throw new Error('Invalid credentials');
+    }
   };
 
   const logout = () => {

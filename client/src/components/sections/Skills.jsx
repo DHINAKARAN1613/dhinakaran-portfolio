@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import SectionTitle from '../ui/SectionTitle';
-import Skeleton from '../ui/Skeleton';
-import api from '../../utils/api';
 
 const SkillBar = ({ skill, index }) => {
   const [ref, inView] = useInView({
@@ -32,27 +29,10 @@ const SkillBar = ({ skill, index }) => {
 };
 
 const Skills = () => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await api.get('/profile');
-        setProfile(data);
-      } catch (error) {
-        console.error('Failed to fetch profile', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,21 +51,44 @@ const Skills = () => {
     },
   };
 
-  if (loading || !profile) {
-    return (
-      <section id="skills" className="section-padding">
-        <div className="container mx-auto max-w-6xl">
-          <SectionTitle title="Technical Expertise" subtitle="Loading skills configuration..." />
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 mt-12">
-            <Skeleton className="h-64 w-full rounded-2xl" />
-            <Skeleton className="h-64 w-full rounded-2xl" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  const skillCategories = profile.skillCategories || [];
+  const skillCategories = [
+    {
+      title: "Frontend Development",
+      skills: [
+        { name: "HTML5 & CSS3", level: 90, color: "text-blue-500" },
+        { name: "JavaScript", level: 85, color: "text-yellow-500" },
+        { name: "Bootstrap & Tailwind CSS", level: 85, color: "text-teal-500" },
+        { name: "Angular", level: 75, color: "text-red-500" },
+      ]
+    },
+    {
+      title: "Backend Development",
+      skills: [
+        { name: "C#", level: 85, color: "text-purple-500" },
+        { name: "ASP.NET MVC & Core", level: 80, color: "text-blue-600" },
+        { name: "Entity Framework & LINQ", level: 80, color: "text-emerald-500" },
+        { name: "ADO.NET", level: 75, color: "text-indigo-500" },
+      ]
+    },
+    {
+      title: "Database & Tools",
+      skills: [
+        { name: "SQL Server", level: 85, color: "text-red-600" },
+        { name: "Git & GitHub", level: 90, color: "text-gray-500" },
+        { name: "IIS & Vercel", level: 75, color: "text-sky-500" },
+        { name: "Postman", level: 85, color: "text-orange-500" },
+      ]
+    },
+    {
+      title: "Soft Skills",
+      skills: [
+        { name: "Problem Solving", level: 95, color: "text-green-500" },
+        { name: "Logical Thinking", level: 90, color: "text-blue-400" },
+        { name: "Team Collaboration", level: 90, color: "text-purple-400" },
+        { name: "Quick Learner & Debugging", level: 95, color: "text-yellow-600" },
+      ]
+    }
+  ];
 
   return (
     <section id="skills" className="section-padding relative">

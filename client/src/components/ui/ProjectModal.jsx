@@ -7,7 +7,9 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
 
   if (!project) return null;
 
-  const images = project.images?.length > 0 ? project.images : [project.image];
+  const mediaItems = project.media?.length > 0 
+    ? project.media 
+    : (project.images?.length > 0 ? project.images.map(url => ({ url, type: 'image' })) : [{ url: project.image, type: 'image' }]);
 
   return (
     <AnimatePresence>
@@ -45,26 +47,41 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   
-                  {/* Image Gallery */}
+                  {/* Media Gallery */}
                   <div className="space-y-4">
-                    <div className="aspect-video rounded-2xl overflow-hidden bg-dark-100 dark:bg-dark-800">
-                      <img 
-                        src={images[activeImage]} 
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                      />
+                    <div className="aspect-video rounded-2xl overflow-hidden bg-dark-100 dark:bg-dark-800 relative">
+                      {mediaItems[activeImage]?.type === 'video' ? (
+                        <video 
+                          src={mediaItems[activeImage].url} 
+                          controls 
+                          autoPlay 
+                          className="w-full h-full object-contain bg-black"
+                        />
+                      ) : (
+                        <img 
+                          src={mediaItems[activeImage]?.url} 
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
                     </div>
-                    {images.length > 1 && (
+                    {mediaItems.length > 1 && (
                       <div className="flex gap-4 overflow-x-auto pb-2">
-                        {images.map((img, idx) => (
+                        {mediaItems.map((item, idx) => (
                           <button
                             key={idx}
                             onClick={() => setActiveImage(idx)}
-                            className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                            className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-all relative ${
                               activeImage === idx ? 'border-primary-500' : 'border-transparent opacity-60 hover:opacity-100'
                             }`}
                           >
-                            <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                            {item.type === 'video' ? (
+                              <div className="w-full h-full bg-dark-800 flex items-center justify-center text-white text-xs font-bold">
+                                VIDEO
+                              </div>
+                            ) : (
+                              <img src={item.url} alt="Thumbnail" className="w-full h-full object-cover" />
+                            )}
                           </button>
                         ))}
                       </div>

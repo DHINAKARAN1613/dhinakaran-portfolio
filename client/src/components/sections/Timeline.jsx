@@ -5,32 +5,25 @@ import SectionTitle from '../ui/SectionTitle';
 
 const timelineData = [
   {
-    year: '2023 - Present',
-    type: 'work',
-    title: 'Full Stack MERN Developer',
-    subtitle: 'Tech Innovators Inc.',
-    description: 'Lead developer for enterprise web applications using React, Node.js, and MongoDB. Improved application performance by 40% and mentored junior developers.',
+    year: '2026',
+    type: 'work', // using work icon for certification
+    title: '.NET Full Stack Development',
+    subtitle: 'SLA Institute',
+    description: 'Comprehensive certification program covering C#, ASP.NET Core MVC, Entity Framework, SQL Server, and modern frontend technologies.',
   },
   {
-    year: '2021 - 2023',
-    type: 'work',
-    title: 'Frontend Developer',
-    subtitle: 'Digital Creation Studio',
-    description: 'Built responsive and interactive user interfaces using React and Tailwind CSS. Collaborated with UI/UX designers to implement pixel-perfect designs.',
-  },
-  {
-    year: '2019 - 2021',
+    year: '2024 - Present',
     type: 'education',
-    title: 'Master of Computer Applications',
-    subtitle: 'Reputed University',
-    description: 'Specialized in Advanced Web Technologies and Database Management Systems. Graduated with honors.',
+    title: 'MCA - Computer Applications',
+    subtitle: 'Sri Muthukumaran Institute of Technology, Mangadu',
+    description: 'Pursuing Master of Computer Applications. Focusing on advanced software engineering, backend architecture, and database management.',
   },
   {
-    year: '2016 - 2019',
+    year: '2021 - 2024',
     type: 'education',
-    title: 'Bachelor of Computer Science',
-    subtitle: 'State College',
-    description: 'Fundamental computer science education including data structures, algorithms, and software engineering principles.',
+    title: 'BCA - Computer Applications',
+    subtitle: 'Government Arts and Science College, Thiruvottiyur',
+    description: 'Completed Bachelor of Computer Applications with a CGPA/Percentage of 78%. Built a strong foundation in programming logic, algorithms, and web development.',
   },
 ];
 

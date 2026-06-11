@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [formData, setFormData] = useState({
-    title: '', description: '', longDescription: '', image: '', techStack: '', github: '', liveDemo: '', featured: false
+    title: '', description: '', longDescription: '', media: [], techStack: '', github: '', liveDemo: '', featured: false
   });
 
   useEffect(() => {
@@ -27,12 +27,34 @@ const Dashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
+      await new Promise(resolve => setTimeout(resolve, 300));
       if (activeTab === 'projects') {
-        const { data } = await api.get('/projects');
-        setProjects(data);
+        const localProjects = localStorage.getItem('portfolio_projects');
+        if (localProjects) {
+          setProjects(JSON.parse(localProjects));
+        } else {
+          const defaultProjects = [
+            {
+              _id: '1', title: 'Smart Employee Management System', description: 'Developed a web-based ASP.NET MVC application to manage employees and workflow tasks efficiently.', techStack: ['ASP.NET MVC', 'C#', 'SQL Server'], featured: true
+            },
+            {
+              _id: '2', title: 'E-Commerce Platform', description: 'Developed a complete e-commerce web application.', techStack: ['ASP.NET MVC', 'C#', 'SQL Server'], featured: false
+            }
+          ];
+          setProjects(defaultProjects);
+          localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
+        }
       } else {
-        const { data } = await api.get('/contacts');
-        setMessages(data);
+        const localMessages = localStorage.getItem('portfolio_messages');
+        if (localMessages) {
+          setMessages(JSON.parse(localMessages));
+        } else {
+          const defaultMessages = [
+            { _id: '1', name: 'John Doe', email: 'john@example.com', subject: 'Job Opportunity', message: 'We are looking for a .NET developer!', createdAt: new Date().toISOString(), read: false }
+          ];
+          setMessages(defaultMessages);
+          localStorage.setItem('portfolio_messages', JSON.stringify(defaultMessages));
+        }
       }
     } catch (error) {
       toast.error('Failed to fetch data');
@@ -48,27 +70,42 @@ const Dashboard = () => {
     const payload = { ...formData, techStack: techArray };
 
     try {
+      let updatedProjects = [...projects];
       if (isEditing) {
-        await api.put(`/projects/${currentProject._id}`, payload);
+        payload._id = currentProject._id;
+        updatedProjects = updatedProjects.map(p => p._id === payload._id ? payload : p);
         toast.success('Project updated successfully');
       } else {
-        await api.post('/projects', payload);
+        payload._id = Date.now().toString();
+        updatedProjects.push(payload);
         toast.success('Project created successfully');
       }
+      
+      localStorage.setItem('portfolio_projects', JSON.stringify(updatedProjects));
       resetForm();
       fetchData();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save project');
+      toast.error('Failed to save project');
     }
   };
 
   const handleEdit = (project) => {
     setCurrentProject(project);
+    
+    let initialMedia = [];
+    if (project.media) {
+      initialMedia = project.media;
+    } else if (project.images) {
+      initialMedia = project.images.map(url => ({ url, type: 'image' }));
+    } else if (project.image) {
+      initialMedia = [{ url: project.image, type: 'image' }];
+    }
+
     setFormData({
       title: project.title,
       description: project.description,
       longDescription: project.longDescription || '',
-      image: project.image || (project.images ? project.images[0] : ''),
+      media: initialMedia,
       techStack: project.techStack.join(', '),
       github: project.github || '',
       liveDemo: project.liveDemo || '',
@@ -80,7 +117,8 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this project?')) return;
     try {
-      await api.delete(`/projects/${id}`);
+      const updatedProjects = projects.filter(p => p._id !== id);
+      localStorage.setItem('portfolio_projects', JSON.stringify(updatedProjects));
       toast.success('Project deleted');
       fetchData();
     } catch {
@@ -91,13 +129,33 @@ const Dashboard = () => {
   const resetForm = () => {
     setIsEditing(false);
     setCurrentProject(null);
-    setFormData({ title: '', description: '', longDescription: '', image: '', techStack: '', github: '', liveDemo: '', featured: false });
+    setFormData({ title: '', description: '', longDescription: '', media: [], techStack: '', github: '', liveDemo: '', featured: false });
+  };
+
+  const handleMediaUpload = (e) => {
+    const files = Array.from(e.target.files);
+    const newMedia = files.map(file => {
+      const isVideo = file.type.startsWith('video/');
+      return {
+        url: URL.createObjectURL(file),
+        type: isVideo ? 'video' : 'image'
+      };
+    });
+    setFormData(prev => ({ ...prev, media: [...prev.media, ...newMedia] }));
+  };
+
+  const removeMedia = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      media: prev.media.filter((_, idx) => idx !== index)
+    }));
   };
 
   // --- Message Handlers ---
   const handleMarkRead = async (id) => {
     try {
-      await api.patch(`/contacts/${id}/read`);
+      const updatedMessages = messages.map(m => m._id === id ? { ...m, read: true } : m);
+      localStorage.setItem('portfolio_messages', JSON.stringify(updatedMessages));
       fetchData();
       toast.success('Message marked as read');
     } catch {
@@ -108,7 +166,8 @@ const Dashboard = () => {
   const handleDeleteMessage = async (id) => {
     if (!window.confirm('Delete this message?')) return;
     try {
-      await api.delete(`/contacts/${id}`);
+      const updatedMessages = messages.filter(m => m._id !== id);
+      localStorage.setItem('portfolio_messages', JSON.stringify(updatedMessages));
       fetchData();
       toast.success('Message deleted');
     } catch {
@@ -207,10 +266,32 @@ const Dashboard = () => {
                             <input type="text" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required className="w-full px-4 py-2 rounded-lg bg-dark-50 dark:bg-dark-800 border border-dark-200 dark:border-dark-700" />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium mb-1">Image URL</label>
-                            <input type="url" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full px-4 py-2 rounded-lg bg-dark-50 dark:bg-dark-800 border border-dark-200 dark:border-dark-700" />
+                            <label className="block text-sm font-medium mb-1">Upload Photos & Videos</label>
+                            <input type="file" accept="image/*,video/*" multiple onChange={handleMediaUpload} className="w-full px-4 py-1.5 rounded-lg bg-dark-50 dark:bg-dark-800 border border-dark-200 dark:border-dark-700 text-sm file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-600 hover:file:bg-primary-100" />
                           </div>
                         </div>
+                        
+                        {formData.media.length > 0 && (
+                          <div className="flex gap-3 flex-wrap bg-dark-50/50 dark:bg-dark-800/30 p-4 rounded-xl border border-dark-200 dark:border-dark-700">
+                            {formData.media.map((item, idx) => (
+                              <div key={idx} className="relative w-24 h-24 rounded-lg bg-dark-200 overflow-hidden shadow-sm group">
+                                {item.type === 'image' ? (
+                                  <img src={item.url} alt="Preview" className="w-full h-full object-cover" />
+                                ) : (
+                                  <video src={item.url} className="w-full h-full object-cover" />
+                                )}
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <button type="button" onClick={() => removeMedia(idx)} className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors transform hover:scale-110">
+                                    <FiTrash2 size={14} />
+                                  </button>
+                                </div>
+                                {item.type === 'video' && (
+                                  <div className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">Video</div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                         <div>
                           <label className="block text-sm font-medium mb-1">Short Description *</label>
                           <textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} required rows="2" className="w-full px-4 py-2 rounded-lg bg-dark-50 dark:bg-dark-800 border border-dark-200 dark:border-dark-700"></textarea>
@@ -248,7 +329,7 @@ const Dashboard = () => {
                       <div className="flex justify-between items-center mb-6">
                         <h2 className="text-xl font-bold">Manage Projects</h2>
                         <button 
-                          onClick={() => setFormData({ title: '', description: '', longDescription: '', image: '', techStack: '', github: '', liveDemo: '', featured: false })}
+                          onClick={() => setFormData({ title: '', description: '', longDescription: '', media: [], techStack: '', github: '', liveDemo: '', featured: false })}
                           className="btn-primary py-2 px-4 text-sm flex items-center gap-2"
                         >
                           <FiPlus /> Add New
@@ -270,9 +351,13 @@ const Dashboard = () => {
                             {projects.map(project => (
                               <tr key={project._id} className="border-b border-dark-100 dark:border-dark-800/50 hover:bg-dark-50 dark:hover:bg-dark-800/30 transition-colors">
                                 <td className="p-4">
-                                  <div className="w-12 h-12 rounded bg-dark-200 dark:bg-dark-700 overflow-hidden">
-                                    {(project.image || (project.images && project.images[0])) && (
-                                      <img src={project.image || project.images[0]} alt={project.title} className="w-full h-full object-cover" />
+                                  <div className="w-12 h-12 rounded bg-dark-200 dark:bg-dark-700 overflow-hidden relative">
+                                    {(project.media?.length > 0 || project.image || (project.images && project.images[0])) && (
+                                      project.media && project.media[0]?.type === 'video' ? (
+                                        <video src={project.media[0].url} className="w-full h-full object-cover" />
+                                      ) : (
+                                        <img src={project.media?.[0]?.url || project.image || project.images[0]} alt={project.title} className="w-full h-full object-cover" />
+                                      )
                                     )}
                                   </div>
                                 </td>

@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { FiGithub, FiExternalLink, FiMaximize2 } from 'react-icons/fi';
 import SectionTitle from '../ui/SectionTitle';
 import ProjectModal from '../ui/ProjectModal';
-import Skeleton from '../ui/Skeleton';
-import api from '../../utils/api';
 
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
   
   const [ref, inView] = useInView({
@@ -17,19 +13,28 @@ const Projects = () => {
     threshold: 0.1,
   });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const { data } = await api.get('/projects');
-        setProjects(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error('Failed to fetch projects', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+  const projects = [
+    {
+      _id: '1',
+      title: 'Smart Employee Management System',
+      description: 'Developed a web-based ASP.NET MVC application to manage employees and workflow tasks efficiently. Features: Employee CRUD, Task Assignment, Tracking, Auth, Analytics Dashboard.',
+      techStack: ['ASP.NET MVC', 'C#', 'SQL Server', 'Entity Framework', 'Bootstrap'],
+      image: 'https://placehold.co/600x400/1e293b/3b82f6?text=Employee+Management',
+      github: '#',
+      liveDemo: '#',
+      featured: true
+    },
+    {
+      _id: '2',
+      title: 'E-Commerce Platform',
+      description: 'Developed a complete e-commerce web application. Features: User Authentication, Product Management, Shopping Cart, Order Tracking, Search Functionality, Admin Dashboard.',
+      techStack: ['ASP.NET MVC', 'C#', 'SQL Server', 'Entity Framework', 'Bootstrap'],
+      image: 'https://placehold.co/600x400/1e293b/3b82f6?text=E-Commerce+Platform',
+      github: '#',
+      liveDemo: '#',
+      featured: false
+    }
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -56,24 +61,7 @@ const Projects = () => {
           subtitle="A selection of my recent work, side projects, and open-source contributions."
         />
 
-        {loading ? (
-          <div className="grid md:grid-cols-2 gap-8">
-            {[1, 2, 3, 4].map(n => (
-              <div key={n} className="rounded-2xl overflow-hidden glass-card">
-                <Skeleton className="w-full aspect-video rounded-none" />
-                <div className="p-6 space-y-4">
-                  <Skeleton className="h-8 w-3/4" />
-                  <Skeleton className="h-20 w-full" />
-                  <div className="flex gap-2">
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-6 w-16" />
-                    <Skeleton className="h-6 w-16" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : projects.length === 0 ? (
+        {projects.length === 0 ? (
           <div className="text-center py-20 text-dark-500">
             No projects available at the moment.
           </div>

@@ -1,10 +1,7 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import CountUp from 'react-countup';
 import SectionTitle from '../ui/SectionTitle';
-import Skeleton from '../ui/Skeleton';
-import api from '../../utils/api';
 
 const StatCard = ({ label, value, suffix }) => {
   const [ref, inView] = useInView({
@@ -25,27 +22,22 @@ const StatCard = ({ label, value, suffix }) => {
 };
 
 const About = () => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const title = "My Journey";
+  const paragraphs = [
+    "I am an aspiring .NET Developer with strong knowledge of C#, ASP.NET MVC, ASP.NET Core, SQL Server, Entity Framework, ADO.NET, HTML, CSS, JavaScript, Bootstrap, Tailwind CSS, and Angular.",
+    "I enjoy developing responsive web applications, solving real-world problems, and continuously learning modern technologies."
+  ];
+  const stats = [
+    { label: 'Projects Completed', value: 10, suffix: '+' },
+    { label: 'Technologies', value: 15, suffix: '+' },
+    { label: 'Lines of Code', value: 50, suffix: 'k+' },
+    { label: 'Hours Coding', value: 1000, suffix: '+' }
+  ];
 
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await api.get('/profile');
-        setProfile(data);
-      } catch (error) {
-        console.error('Failed to fetch profile', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -60,26 +52,6 @@ const About = () => {
     hidden: { opacity: 0, x: -20 },
     visible: { opacity: 1, x: 0 },
   };
-
-  if (loading || !profile) {
-    return (
-      <section id="about" className="section-padding bg-dark-50 dark:bg-dark-900/50">
-        <div className="container mx-auto max-w-6xl">
-          <SectionTitle title="About Me" subtitle="Loading profile details..." />
-          <div className="grid lg:grid-cols-2 gap-12 items-center text-center">
-            <Skeleton className="h-48 w-full rounded-2xl" />
-            <Skeleton className="h-48 w-full rounded-2xl" />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  const title = profile.aboutTitle || "My Journey";
-  const paragraphs = profile.aboutParagraphs?.length > 0 
-    ? profile.aboutParagraphs 
-    : ["I'm a developer building digital experiences."];
-  const stats = profile.stats || [];
 
   return (
     <section id="about" className="section-padding bg-dark-50 dark:bg-dark-900/50">
