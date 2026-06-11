@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSun, FiMoon, FiMenu, FiX, FiGithub, FiLinkedin } from 'react-icons/fi';
 import { useTheme } from '../../context/ThemeContext';
+import defaultLogo from '../../assets/logo.png';
 
 const navLinks = [
   { name: 'Home', href: '/#home' },
@@ -61,13 +62,7 @@ const Navbar = () => {
         }`}>
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            {profile?.logoImage ? (
-              <img src={profile.logoImage} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
-            ) : (
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center text-white font-bold text-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-                D
-              </div>
-            )}
+            <img src={profile?.logoImage || defaultLogo} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
             <span className="font-display font-bold text-xl hidden sm:block">
               {profile?.name ? profile.name.replace('.', '') : 'Dhinakaran M'}<span className="text-primary-500">.</span>
             </span>
