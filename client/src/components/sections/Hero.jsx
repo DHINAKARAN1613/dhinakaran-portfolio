@@ -67,6 +67,7 @@ const Hero = () => {
             <span className="text-3xl md:text-5xl text-dark-600 dark:text-dark-300">
               I'm a{' '}
               <TypeAnimation
+                key={rolesSequence.join('-')}
                 sequence={rolesSequence}
                 wrapper="span"
                 speed={50}
