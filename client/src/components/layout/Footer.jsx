@@ -1,7 +1,6 @@
 import { FiGithub, FiInstagram, FiLinkedin, FiMail, FiTwitter } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import defaultLogo from '../../assets/logo.png';
 
 const Footer = () => {
   const [profile, setProfile] = useState(null);
@@ -20,7 +19,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2 group">
-             <img src={profile?.logoImage || defaultLogo} alt="Logo" className="w-8 h-8 rounded-lg object-cover shadow-md" />
+             <img src={profile?.logoImage || '/logo.png'} alt="Logo" className="w-8 h-8 rounded-lg object-cover shadow-md" />
             <span className="font-display font-medium text-lg">
               {profile?.name ? profile.name.replace('.', '') : 'Dhinakaran M'}
             </span>
