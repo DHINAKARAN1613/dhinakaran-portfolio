@@ -12,7 +12,7 @@ const ProfileTab = () => {
   const defaultProfile = {
     greeting: 'Hello, I\'m',
     name: 'Dhinakaran M.',
-    roles: ['Aspiring .NET Developer', 'Full Stack Developer', 'Backend Engineer'],
+    roles: ['Aspiring .NET Developer', 'Full Stack Developer', 'Dot Net Core Developer'],
     heroDescription: 'Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies.',
     githubUrl: 'https://github.com/DHINAKARAN1613',
     linkedinUrl: 'https://www.linkedin.com/in/dhina1316/',

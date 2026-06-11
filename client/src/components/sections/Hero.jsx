@@ -18,7 +18,7 @@ const Hero = () => {
   const name = profile?.name || "DHINAKARAN M";
   
   // Transform roles array into the sequence format TypeAnimation expects [role1, delay, role2, delay, ...]
-  const rawRoles = profile?.roles?.length > 0 ? profile.roles : ["Aspiring .NET Developer", "Full Stack Developer", "Backend Engineer"];
+  const rawRoles = profile?.roles?.length > 0 ? profile.roles : ["Aspiring .NET Developer", "Full Stack Developer", "Dot Net Core Developer"];
   const rolesSequence = rawRoles.flatMap(role => [role, 2000]);
   
   const description = profile?.heroDescription || "Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies. Focused on building scalable web applications with clean UI and robust backend architecture.";
