@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
@@ -31,6 +31,14 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    const version = localStorage.getItem('portfolio_version');
+    if (version !== '1.1') {
+      localStorage.removeItem('portfolio_profile');
+      localStorage.setItem('portfolio_version', '1.1');
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <div className="cursor-glow pointer-events-none fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
