@@ -1,7 +1,17 @@
 import { FiGithub, FiInstagram, FiLinkedin, FiMail, FiTwitter } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Footer = () => {
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const localProfile = localStorage.getItem('portfolio_profile');
+    if (localProfile) {
+      setProfile(JSON.parse(localProfile));
+    }
+  }, []);
+
   const year = new Date().getFullYear();
 
   return (
@@ -18,10 +28,10 @@ const Footer = () => {
           </div>
 
           <div className="flex gap-4">
-            <a href="https://github.com/dhinakaran" target="_blank" rel="noreferrer" className="p-2 text-dark-500 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-dark-800 rounded-full transition-all">
+            <a href={profile?.githubUrl || "https://github.com/DHINAKARAN1613"} target="_blank" rel="noreferrer" className="p-2 text-dark-500 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-dark-800 rounded-full transition-all">
               <FiGithub className="w-5 h-5" />
             </a>
-            <a href="https://www.linkedin.com/in/dhina1316/" target="_blank" rel="noreferrer" className="p-2 text-dark-500 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-dark-800 rounded-full transition-all">
+            <a href={profile?.linkedinUrl || "https://www.linkedin.com/in/dhina1316/"} target="_blank" rel="noreferrer" className="p-2 text-dark-500 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-dark-800 rounded-full transition-all">
               <FiLinkedin className="w-5 h-5" />
             </a>
             <a href="https://www.instagram.com/dhina_einstein_offl?igsh=MTE0eDloY2diZGx6Yw==" target="_blank" rel="noreferrer" className="p-2 text-dark-500 hover:text-sky-500 hover:bg-sky-50 dark:hover:bg-dark-800 rounded-full transition-all">

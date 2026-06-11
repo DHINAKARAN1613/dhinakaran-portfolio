@@ -1,12 +1,27 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { FiDownload, FiArrowRight, FiGithub, FiLinkedin, FiChevronDown } from 'react-icons/fi';
-import resume from './resume.pdf';
+import defaultResume from './resume.pdf';
+
 const Hero = () => {
-  const greeting = "Hello, I'm";
-  const name = "DHINAKARAN M";
-  const rolesSequence = ["Aspiring .NET Developer", 2000, "Full Stack Developer", 2000, "Backend Engineer", 2000];
-  const description = "Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies. Focused on building scalable web applications with clean UI and robust backend architecture.";
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    const localProfile = localStorage.getItem('portfolio_profile');
+    if (localProfile) {
+      setProfile(JSON.parse(localProfile));
+    }
+  }, []);
+
+  const greeting = profile?.greeting || "Hello, I'm";
+  const name = profile?.name || "DHINAKARAN M";
+  
+  // Transform roles array into the sequence format TypeAnimation expects [role1, delay, role2, delay, ...]
+  const rawRoles = profile?.roles?.length > 0 ? profile.roles : ["Aspiring .NET Developer", "Full Stack Developer", "Backend Engineer"];
+  const rolesSequence = rawRoles.flatMap(role => [role, 2000]);
+  
+  const description = profile?.heroDescription || "Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies. Focused on building scalable web applications with clean UI and robust backend architecture.";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -70,7 +85,7 @@ const Hero = () => {
               View Projects
               <FiArrowRight className="transform group-hover:translate-x-1 transition-transform" />
             </a>
-            <a href={resume} download="Dhinakaran_Resume.pdf" target="_blank" rel="noreferrer" className="btn-outline w-full sm:w-auto flex items-center justify-center gap-2 py-4 px-8 text-lg group">
+            <a href={profile?.resumeUrl || defaultResume} download="Dhinakaran_Resume.pdf" target="_blank" rel="noreferrer" className="btn-outline w-full sm:w-auto flex items-center justify-center gap-2 py-4 px-8 text-lg group">
               <FiDownload className="transform group-hover:-translate-y-1 transition-transform" />
               Download Resume
             </a>
@@ -81,10 +96,10 @@ const Hero = () => {
 
           {/* Social Links */}
           <motion.div variants={itemVariants} className="flex items-center justify-center gap-6">
-            <a href="https://github.com/dhinakaran" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
+            <a href={profile?.githubUrl || "https://github.com/DHINAKARAN1613"} target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
               <FiGithub size={24} />
             </a>
-            <a href="https://www.linkedin.com/in/dhina1316/" target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
+            <a href={profile?.linkedinUrl || "https://www.linkedin.com/in/dhina1316/"} target="_blank" rel="noreferrer" className="text-dark-500 hover:text-primary-500 dark:text-dark-400 dark:hover:text-primary-400 transition-colors transform hover:scale-110">
               <FiLinkedin size={24} />
             </a>
           </motion.div>

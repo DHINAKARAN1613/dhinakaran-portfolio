@@ -17,9 +17,17 @@ const Navbar = () => {
   const { darkMode, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
   const location = useLocation();
 
   const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    const localProfile = localStorage.getItem('portfolio_profile');
+    if (localProfile) {
+      setProfile(JSON.parse(localProfile));
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,11 +61,15 @@ const Navbar = () => {
         }`}>
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center text-white font-bold text-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-              D
-            </div>
+            {profile?.logoImage ? (
+              <img src={profile.logoImage} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center text-white font-bold text-xl shadow-lg transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                D
+              </div>
+            )}
             <span className="font-display font-bold text-xl hidden sm:block">
-              Dhinakaran M<span className="text-primary-500">.</span>
+              {profile?.name ? profile.name.replace('.', '') : 'Dhinakaran M'}<span className="text-primary-500">.</span>
             </span>
           </Link>
 
@@ -78,7 +90,7 @@ const Navbar = () => {
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-4">
             <a 
-              href="https://github.com/dhinakaran" 
+              href={profile?.githubUrl || "https://github.com/DHINAKARAN1613"} 
               target="_blank" 
               rel="noreferrer"
               className="p-2 rounded-full hover:bg-dark-100 dark:hover:bg-dark-800 transition-colors hidden sm:block"
@@ -86,7 +98,7 @@ const Navbar = () => {
               <FiGithub className="w-5 h-5" />
             </a>
             <a 
-              href="https://linkedin.com/in/dhinakaran" 
+              href={profile?.linkedinUrl || "https://www.linkedin.com/in/dhina1316/"} 
               target="_blank" 
               rel="noreferrer"
               className="p-2 rounded-full hover:bg-dark-100 dark:hover:bg-dark-800 transition-colors hidden sm:block"
@@ -134,10 +146,10 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="flex justify-center gap-4 mt-4 pt-4 border-t border-dark-200 dark:border-dark-700">
-                <a href="https://github.com/dhinakaran" target="_blank" rel="noreferrer" className="p-3 bg-dark-100 dark:bg-dark-800 rounded-full">
+                <a href={profile?.githubUrl || "https://github.com/DHINAKARAN1613"} target="_blank" rel="noreferrer" className="p-3 bg-dark-100 dark:bg-dark-800 rounded-full">
                   <FiGithub className="w-5 h-5" />
                 </a>
-                <a href="https://linkedin.com/in/dhinakaran" target="_blank" rel="noreferrer" className="p-3 bg-dark-100 dark:bg-dark-800 rounded-full">
+                <a href={profile?.linkedinUrl || "https://www.linkedin.com/in/dhina1316/"} target="_blank" rel="noreferrer" className="p-3 bg-dark-100 dark:bg-dark-800 rounded-full">
                   <FiLinkedin className="w-5 h-5 text-blue-600" />
                 </a>
               </div>

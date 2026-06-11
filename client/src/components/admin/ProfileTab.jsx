@@ -14,6 +14,10 @@ const ProfileTab = () => {
     name: 'Dhinakaran M.',
     roles: ['Aspiring .NET Developer', 'Full Stack Developer', 'Backend Engineer'],
     heroDescription: 'Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies.',
+    githubUrl: 'https://github.com/DHINAKARAN1613',
+    linkedinUrl: 'https://www.linkedin.com/in/dhina1316/',
+    resumeUrl: '',
+    logoImage: '',
     aboutTitle: 'About Me',
     aboutParagraphs: [
       'I am an aspiring .NET Developer with a strong foundation in building scalable and efficient web applications.',
@@ -77,6 +81,23 @@ const ProfileTab = () => {
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleFileUpload = (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('File size must be less than 2MB to save locally.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfile({ ...profile, [field]: reader.result });
+      toast.success(`${field} loaded successfully! Don't forget to save.`);
+    };
+    reader.readAsDataURL(file);
   };
 
   // --- Helpers for simple arrays (strings) ---
@@ -150,6 +171,41 @@ const ProfileTab = () => {
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
       <form onSubmit={handleSave} className="space-y-10 max-w-4xl mx-auto pb-12">
         
+        {/* GENERAL SETTINGS SECTION */}
+        <section className="bg-dark-50 dark:bg-dark-800/50 p-6 rounded-2xl border border-dark-100 dark:border-dark-700">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-primary-500">
+            General & Social Settings
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-sm font-medium mb-1">Navbar Logo Image (Max 2MB)</label>
+              <div className="flex items-center gap-4">
+                {profile.logoImage && <img src={profile.logoImage} alt="Logo Preview" className="w-10 h-10 object-cover rounded-full" />}
+                <input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'logoImage')} className="w-full text-sm text-dark-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Resume PDF (Max 2MB)</label>
+              <div className="flex items-center gap-4">
+                {profile.resumeUrl && <span className="text-xs text-green-500 font-bold">✓ Uploaded</span>}
+                <input type="file" accept="application/pdf" onChange={(e) => handleFileUpload(e, 'resumeUrl')} className="w-full text-sm text-dark-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium mb-1">GitHub URL</label>
+              <input type="url" value={profile.githubUrl || ''} onChange={(e) => setProfile({...profile, githubUrl: e.target.value})} className="w-full px-4 py-2 rounded-lg bg-white dark:bg-dark-900 border border-dark-200 dark:border-dark-700" placeholder="https://github.com/..." />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">LinkedIn URL</label>
+              <input type="url" value={profile.linkedinUrl || ''} onChange={(e) => setProfile({...profile, linkedinUrl: e.target.value})} className="w-full px-4 py-2 rounded-lg bg-white dark:bg-dark-900 border border-dark-200 dark:border-dark-700" placeholder="https://linkedin.com/in/..." />
+            </div>
+          </div>
+        </section>
+
         {/* HERO SECTION */}
         <section className="bg-dark-50 dark:bg-dark-800/50 p-6 rounded-2xl border border-dark-100 dark:border-dark-700">
           <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-primary-500">
