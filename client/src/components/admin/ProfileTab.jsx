@@ -9,21 +9,52 @@ const ProfileTab = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const defaultProfile = {
+    greeting: 'Hello, I\'m',
+    name: 'Dhinakaran M.',
+    roles: ['Aspiring .NET Developer', 'Full Stack Developer', 'Backend Engineer'],
+    heroDescription: 'Passionate .NET Developer skilled in ASP.NET MVC, ASP.NET Core, C#, SQL Server, Entity Framework, ADO.NET, and modern frontend technologies.',
+    aboutTitle: 'About Me',
+    aboutParagraphs: [
+      'I am an aspiring .NET Developer with a strong foundation in building scalable and efficient web applications.',
+      'I enjoy developing clean, maintainable code and solving complex problems using modern technologies.'
+    ],
+    stats: [
+      { label: 'Projects Completed', value: 10, suffix: '+' },
+      { label: 'Months Experience', value: 6, suffix: '+' }
+    ],
+    skillCategories: [
+      {
+        title: "Frontend Development",
+        skills: [
+          { name: "HTML5 & CSS3", level: 90, color: "text-blue-500" },
+          { name: "JavaScript", level: 85, color: "text-yellow-500" }
+        ]
+      },
+      {
+        title: "Backend Development",
+        skills: [
+          { name: "C#", level: 85, color: "text-purple-500" },
+          { name: "ASP.NET Core", level: 80, color: "text-blue-600" }
+        ]
+      }
+    ]
+  };
+
   useEffect(() => {
     fetchProfile();
   }, []);
 
   const fetchProfile = async () => {
     try {
-      const { data } = await api.get('/profile');
-      // If db is empty but schema exists, it might return empty object
-      if (!data._id) {
-        setProfile({
-          greeting: '', name: '', roles: [], heroDescription: '',
-          aboutTitle: '', aboutParagraphs: [], stats: [], skillCategories: []
-        });
+      // Simulate network delay for realistic UI feeling
+      await new Promise(resolve => setTimeout(resolve, 600));
+      const localProfile = localStorage.getItem('portfolio_profile');
+      if (localProfile) {
+        setProfile(JSON.parse(localProfile));
       } else {
-        setProfile(data);
+        setProfile(defaultProfile);
+        localStorage.setItem('portfolio_profile', JSON.stringify(defaultProfile));
       }
     } catch (error) {
       toast.error('Failed to load profile data');
@@ -36,7 +67,9 @@ const ProfileTab = () => {
     e.preventDefault();
     setSaving(true);
     try {
-      await api.put('/profile', profile);
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      localStorage.setItem('portfolio_profile', JSON.stringify(profile));
       toast.success('Profile updated successfully!');
       fetchProfile();
     } catch (error) {
