@@ -12,25 +12,35 @@ const Projects = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
-
+  
   const projects = [
     {
       _id: '1',
+      title: 'A Direct to Consumer E-Commerce Platform',
+      description: 'Developed a complete e-commerce web application. Features: User Authentication, Product Management, Shopping Cart, Order Tracking, Search Functionality, Admin Dashboard.',
+      techStack: ['Next.Js', 'React.Js', 'Postgre SQL', 'Node.Js', 'TailwindCss','JWT Authentication'],
+      image: '/project-1.png',
+      github: '#',
+      liveDemo: 'https://yogam-organic-farms.vercel.app',
+      featured: false
+    },
+    {
+      _id: '2',
       title: 'Smart Employee Management System',
       description: 'Developed a web-based ASP.NET MVC application to manage employees and workflow tasks efficiently. Features: Employee CRUD, Task Assignment, Tracking, Auth, Analytics Dashboard.',
       techStack: ['ASP.NET MVC', 'C#', 'SQL Server', 'Entity Framework', 'Bootstrap'],
-      image: 'https://placehold.co/600x400/1e293b/3b82f6?text=Employee+Management',
-      github: '#',
+      image: '/project-2.png',
+      github: 'https://github.com/DHINAKARAN1613?tab=repositories',
       liveDemo: '#',
       featured: true
     },
     {
-      _id: '2',
+      _id: '3',
       title: 'E-Commerce Platform',
       description: 'Developed a complete e-commerce web application. Features: User Authentication, Product Management, Shopping Cart, Order Tracking, Search Functionality, Admin Dashboard.',
       techStack: ['ASP.NET MVC', 'C#', 'SQL Server', 'Entity Framework', 'Bootstrap'],
-      image: 'https://placehold.co/600x400/1e293b/3b82f6?text=E-Commerce+Platform',
-      github: '#',
+      image: '/project-3.png',
+      github: 'https://github.com/DHINAKARAN1613?tab=repositories',
       liveDemo: '#',
       featured: false
     }

@@ -12,7 +12,7 @@ const timelineData = [
     description: 'Comprehensive certification program covering C#, ASP.NET Core MVC, Entity Framework, SQL Server, and modern frontend technologies.',
   },
   {
-    year: '2024 - Present',
+    year: '2024 - 2026',
     type: 'education',
     title: 'MCA - Computer Applications',
     subtitle: 'Sri Muthukumaran Institute of Technology, Mangadu',
